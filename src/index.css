@@ -12,3 +12,13 @@
 .success {
     color: green;
 }
+.blog-item {
+    border: solid;
+    border-width: 1px;
+    margin-bottom: 5px;
+    padding: 2px;
+}
+.blog-item p{
+    margin: 0;
+    padding: 2px;
+}

@@ -6,16 +6,11 @@ import LoginForm from "./components/LoginForm";
 import './index.css'
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [password, setPassword] = useState('')
-  const [username, setUsername] = useState('')
-
-  const [author, setAuthor] = useState('')
-  const [title, setTitle] = useState('')
-  const [url, setUrl] = useState('')
 
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
@@ -46,18 +41,17 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
+  const handleLogin = async (userIn) => {
     try {
-      const user = await loginService.login({username, password})
+      const user = await loginService.login(userIn)
       setUser(user)
       blogService.setToken(user.token)
       localStorage.setItem(LSUSERKEY, JSON.stringify(user))
-      setUsername('')
-      setPassword('')
       displayNotificationFor('Login Successful', 5, setSuccess)
+      return true
     } catch(error) {
       displayNotificationFor('Wrong Username or Password', 5, setError)
+      return false
     }
   }
 
@@ -68,17 +62,15 @@ const App = () => {
     displayNotificationFor('Logout Successful', 5, setSuccess)
   }
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault()
+  const handleNewBlog = async (blogIn) => {
     try {
-      const newBlog = await blogService.create({title, author, url})
+      const newBlog = await blogService.create(blogIn)
       setBlogs(blogs.concat(newBlog))
-      setTitle('')
-      setUrl('')
-      setAuthor('')
       displayNotificationFor(`Added ${newBlog.title} by ${newBlog.author}`, 5, setSuccess)
+      return true
     } catch(error) {
       displayNotificationFor('Adding Blog Failed', 5, setError)
+      return false
     }
   }
 
@@ -89,7 +81,9 @@ const App = () => {
         <h2>Log In</h2>
         <Notification message={error} className={'error'}/>
         <Notification message={success} className={'success'}/>
-        <LoginForm handleSubmit={handleLogin} password={{password, setPassword}} username={{username, setUsername}}/>
+        <Togglable buttonLabel={'login'}>
+          <LoginForm loginUser={handleLogin}/>
+        </Togglable>
       </div>
 
     )
@@ -103,7 +97,10 @@ const App = () => {
       <Notification message={success} className={'success'}/>
       <p>{user.name} is logged in <button onClick={handleLogout}>Log Out</button></p>
 
-      <BlogForm handleSubmit={handleNewBlog} author={{author, setAuthor}} title={{title, setTitle}} url={{url, setUrl}}/>
+      <Togglable buttonLabel={'Add a blog'}>
+        <BlogForm addBlog={handleNewBlog}/>
+      </Togglable>
+
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
