@@ -1,37 +1,53 @@
-import {useState} from "react";
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 
-const LoginForm = ({loginUser}) => {
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+function LoginForm({ loginUser }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const login = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const success = await loginUser({
       username,
-      password
-    })
-    if(success){
-      setPassword('')
-      setUsername('')
+      password,
+    });
+    if (success) {
+      setPassword('');
+      setUsername('');
     }
-  }
+  };
 
   return (
     <form onSubmit={login}>
       <p>
-        <label htmlFor='username'>Username: </label>
-        <input type='text' onChange={({target}) => setUsername(target.value)} value={username}
-               id='username'/>
+        <label htmlFor="username">
+          Username:
+          <input
+            type="text"
+            onChange={({ target }) => setUsername(target.value)}
+            value={username}
+            id="username"
+          />
+        </label>
       </p>
       <p>
-        <label htmlFor='password'>Password: </label>
-        <input type='text' onChange={({target}) => setPassword(target.value)} value={password}
-               id='password'/>
+        <label htmlFor="password">
+          Password:
+          <input
+            type="text"
+            onChange={({ target }) => setPassword(target.value)}
+            value={password}
+            id="password"
+          />
+        </label>
       </p>
-      <button type='submit'>Login</button>
+      <button type="submit">Login</button>
     </form>
-  )
+  );
 }
 
-export default LoginForm
+LoginForm.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+};
+
+export default LoginForm;

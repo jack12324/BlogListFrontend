@@ -1,12 +1,22 @@
-const Notification = ({message, className}) =>{
-    if(message===null){
-        return null
-    }
-    return (
-        <div className={`notification ${className}`}>
-            {message}
-        </div>
-    )
+import PropTypes from 'prop-types';
+
+function Notification({ message, className }) {
+  if (message === null) {
+    return null;
+  }
+  return (
+    <div className={`notification ${className}`}>
+      {message}
+    </div>
+  );
 }
 
-export default Notification
+Notification.propTypes = {
+  message: PropTypes.string,
+  className: PropTypes.string.isRequired,
+};
+
+Notification.defaultProps = {
+  message: null,
+};
+export default Notification;
