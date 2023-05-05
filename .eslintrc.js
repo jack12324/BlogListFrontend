@@ -3,6 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
     jest: true,
+    'cypress/globals': true,
   },
   extends: [
     'plugin:react/recommended',
@@ -15,7 +16,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [
-    'react',
+    'react', 'jest', 'cypress',
   ],
   rules: {
     'react/react-in-jsx-scope': 'off',

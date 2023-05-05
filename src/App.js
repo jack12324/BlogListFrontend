@@ -101,7 +101,7 @@ function App() {
         <h2>Log In</h2>
         <Notification message={error} className="error" />
         <Notification message={success} className="success" />
-        <Togglable buttonLabel="login">
+        <Togglable key="loginToggle" buttonLabel="login">
           <LoginForm loginUser={handleLogin} />
         </Togglable>
       </div>
@@ -123,7 +123,7 @@ function App() {
         <button type="button" onClick={handleLogout}>Log Out</button>
       </p>
 
-      <Togglable buttonLabel="Add a blog">
+      <Togglable key="newBlogToggle" buttonLabel="Add a blog">
         <BlogForm addBlog={handleNewBlog} />
       </Togglable>
 

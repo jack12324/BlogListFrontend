@@ -41,7 +41,7 @@ function LoginForm({ loginUser }) {
           />
         </label>
       </p>
-      <button type="submit">Login</button>
+      <button id="login-form-submit" type="submit">Login</button>
     </form>
   );
 }
