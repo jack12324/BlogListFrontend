@@ -40,7 +40,7 @@ function BlogForm({ addBlog }) {
           <input type="text" value={url} onChange={({ target }) => setUrl(target.value)} id="url" />
         </label>
       </p>
-      <button type="submit">create</button>
+      <button id="blog-form-submit-button" type="submit">create</button>
     </form>
   );
 }

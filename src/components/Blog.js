@@ -29,13 +29,13 @@ function Blog({
             <button type="button" onClick={toggleShowDetails}>hide</button>
           </p>
           <p>{blog.url}</p>
-          <p>
+          <p className="likes">
             {blog.likes}
             <button type="button" onClick={() => handleLike(blog)}>like</button>
           </p>
           <p>{blog.user.name}</p>
           { blog.user.username === currentUser.username
-            ? <p><button type="button" onClick={() => handleDelete(blog)}>remove</button></p>
+            ? <p><button id="delete-blog-button" type="button" onClick={() => handleDelete(blog)}>remove</button></p>
             : null}
         </div>
       )

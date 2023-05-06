@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -14,6 +14,8 @@ function App() {
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  const blogFormRef = useRef();
 
   const LSUSERKEY = 'blogListAppLoggedInUser';
 
@@ -68,6 +70,7 @@ function App() {
       const newBlog = await blogService.create(blogIn);
       setBlogs(blogs.concat({ ...newBlog, user }));
       displayNotificationFor(`Added ${newBlog.title} by ${newBlog.author}`, 5, setSuccess);
+      blogFormRef.current.toggleVisibility();
       return true;
     } catch (err) {
       displayNotificationFor('Adding Blog Failed', 5, setError);
@@ -123,7 +126,7 @@ function App() {
         <button type="button" onClick={handleLogout}>Log Out</button>
       </p>
 
-      <Togglable key="newBlogToggle" buttonLabel="Add a blog">
+      <Togglable key="newBlogToggle" buttonLabel="Add a blog" ref={blogFormRef}>
         <BlogForm addBlog={handleNewBlog} />
       </Togglable>
 
