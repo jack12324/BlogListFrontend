@@ -1,44 +1,52 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteBlog, likeBlog } from "../reducer/blogReducer";
 
-function Blog({
-  blog, handleLike, handleDelete, currentUser,
-}) {
+function Blog({ blog }) {
   const [showDetails, setShowDetails] = useState(false);
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.currentUser);
 
   const toggleShowDetails = () => {
     setShowDetails(!showDetails);
   };
 
-  return (
-    !showDetails
-      ? (
-        <div className="blog-item">
-          {blog.title}
-          {' '}
-          {blog.author}
-          <button type="button" onClick={toggleShowDetails}>view</button>
-        </div>
-      )
-      : (
-        <div className="blog-item">
-          <p>
-            {blog.title}
-            {' '}
-            {blog.author}
-            <button type="button" onClick={toggleShowDetails}>hide</button>
-          </p>
-          <p>{blog.url}</p>
-          <p className="likes">
-            {blog.likes}
-            <button type="button" onClick={() => handleLike(blog)}>like</button>
-          </p>
-          <p>{blog.user.name}</p>
-          { blog.user.username === currentUser.username
-            ? <p><button id="delete-blog-button" type="button" onClick={() => handleDelete(blog)}>remove</button></p>
-            : null}
-        </div>
-      )
+  return !showDetails ? (
+    <div className="blog-item">
+      {blog.title} {blog.author}
+      <button type="button" onClick={toggleShowDetails}>
+        view
+      </button>
+    </div>
+  ) : (
+    <div className="blog-item">
+      <p>
+        {blog.title} {blog.author}
+        <button type="button" onClick={toggleShowDetails}>
+          hide
+        </button>
+      </p>
+      <p>{blog.url}</p>
+      <p className="likes">
+        {blog.likes}
+        <button type="button" onClick={() => dispatch(likeBlog(blog))}>
+          like
+        </button>
+      </p>
+      <p>{blog.user.name}</p>
+      {blog.user.username === currentUser.username ? (
+        <p>
+          <button
+            id="delete-blog-button"
+            type="button"
+            onClick={() => dispatch(deleteBlog(blog))}
+          >
+            remove
+          </button>
+        </p>
+      ) : null}
+    </div>
   );
 }
 
@@ -52,11 +60,6 @@ Blog.propTypes = {
       name: PropTypes.string.isRequired,
       username: PropTypes.string.isRequired,
     }),
-  }).isRequired,
-  handleLike: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  currentUser: PropTypes.shape({
-    username: PropTypes.string.isRequired,
   }).isRequired,
 };
 
