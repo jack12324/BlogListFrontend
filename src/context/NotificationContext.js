@@ -28,13 +28,6 @@ export const useNotificationDispatch = () => {
   return valueAndDispatch[1];
 };
 
-// const displaySuccessNotificationFor = (message, seconds) => {
-//   notificationDispatch({ type: "SET_SUCCESS", payload: message });
-//   setTimeout(() => {
-//     notificationDispatch({ type: "CLEAR_SUCCESS" });
-//   }, 1000 * seconds);
-// };
-
 export const displaySuccessNotificationFor = (dispatch, message, seconds) => {
   dispatch({ type: "SET_SUCCESS", payload: message });
   setTimeout(() => {
