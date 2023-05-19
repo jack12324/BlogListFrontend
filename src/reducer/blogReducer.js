@@ -39,7 +39,7 @@ export const initializeBlogs = () => async (dispatch) => {
 export const createBlog = (blog, user) => async (dispatch) => {
   try {
     const newBlog = await blogService.create(blog);
-    dispatch(appendBlog({ ...newBlog, ...user }));
+    dispatch(appendBlog({ ...newBlog, user }));
     dispatch(
       displaySuccessNotificationFor(
         `Added ${newBlog.title} by ${newBlog.author}`,

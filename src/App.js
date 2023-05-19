@@ -8,7 +8,8 @@ import SuccessNotification from "./components/SuccessNotification";
 import Togglable from "./components/Togglable";
 import ErrorNotification from "./components/ErrorNotification";
 import { initializeBlogs } from "./reducer/blogReducer";
-import { initializeCurrentUser, logout } from "./reducer/currentUserReducer";
+import { initializeCurrentUser } from "./reducer/currentUserReducer";
+import CurrentUser from "./components/CurrentUser";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,6 +19,10 @@ function App() {
   const user = useSelector((state) => state.currentUser);
 
   const blogFormRef = useRef();
+
+  const toggleBlogForm = () => {
+    blogFormRef.current.toggleVisibility();
+  };
 
   useEffect(() => {
     dispatch(initializeBlogs());
@@ -45,15 +50,10 @@ function App() {
       <h2>blogs</h2>
       <SuccessNotification />
       <ErrorNotification />
-      <p>
-        {user.name} is logged in{" "}
-        <button type="button" onClick={() => dispatch(logout())}>
-          Log Out
-        </button>
-      </p>
+      <CurrentUser />
 
       <Togglable key="newBlogToggle" buttonLabel="Add a blog" ref={blogFormRef}>
-        <BlogForm />
+        <BlogForm toggle={toggleBlogForm} />
       </Togglable>
 
       {blogs.map((blog) => (

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PropTypes from "prop-types";
 import { createBlog } from "../reducer/blogReducer";
 
-function BlogForm() {
+function BlogForm({ toggle }) {
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
@@ -26,6 +27,7 @@ function BlogForm() {
       setAuthor("");
       setTitle("");
       setUrl("");
+      toggle();
     }
   };
 
@@ -70,5 +72,13 @@ function BlogForm() {
     </form>
   );
 }
+
+BlogForm.propTypes = {
+  toggle: PropTypes.func,
+};
+
+BlogForm.defaultProps = {
+  toggle: () => {},
+};
 
 export default BlogForm;
