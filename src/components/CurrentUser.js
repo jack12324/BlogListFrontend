@@ -4,6 +4,7 @@ import { logout } from "../reducer/currentUserReducer";
 function CurrentUser() {
   const user = useSelector((state) => state.currentUser);
   const dispatch = useDispatch();
+  if (!user) return null;
   return (
     <p>
       {user.name} is logged in{" "}

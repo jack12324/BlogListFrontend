@@ -1,28 +1,20 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Blog from "./components/Blog";
-import LoginForm from "./components/LoginForm";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./index.css";
-import BlogForm from "./components/BlogForm";
 import SuccessNotification from "./components/SuccessNotification";
-import Togglable from "./components/Togglable";
 import ErrorNotification from "./components/ErrorNotification";
 import { initializeBlogs } from "./reducer/blogReducer";
 import { initializeCurrentUser } from "./reducer/currentUserReducer";
 import CurrentUser from "./components/CurrentUser";
+import Login from "./components/Login";
+import Blogs from "./components/Blogs";
+import Users from "./components/Users";
+import { initializeUsers } from "./reducer/usersReducer";
 
 function App() {
   const dispatch = useDispatch();
-  const blogs = useSelector((state) =>
-    [...state.blogs].sort((a, b) => b.likes - a.likes)
-  );
   const user = useSelector((state) => state.currentUser);
-
-  const blogFormRef = useRef();
-
-  const toggleBlogForm = () => {
-    blogFormRef.current.toggleVisibility();
-  };
 
   useEffect(() => {
     dispatch(initializeBlogs());
@@ -32,34 +24,24 @@ function App() {
     dispatch(initializeCurrentUser());
   }, []);
 
-  if (!user) {
-    return (
-      <div>
-        <h2>Log In</h2>
-        <SuccessNotification />
-        <ErrorNotification />
-        <Togglable key="loginToggle" buttonLabel="login">
-          <LoginForm />
-        </Togglable>
-      </div>
-    );
-  }
+  useEffect(() => {
+    dispatch(initializeUsers());
+  }, []);
 
   return (
-    <div>
-      <h2>blogs</h2>
-      <SuccessNotification />
-      <ErrorNotification />
-      <CurrentUser />
+    <Router>
+      <div>
+        <h2>{user ? "Blogs" : "Log In"}</h2>
+        <SuccessNotification />
+        <ErrorNotification />
+        <CurrentUser />
+      </div>
 
-      <Togglable key="newBlogToggle" buttonLabel="Add a blog" ref={blogFormRef}>
-        <BlogForm toggle={toggleBlogForm} />
-      </Togglable>
-
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
-    </div>
+      <Routes>
+        <Route path="/" element={user ? <Blogs /> : <Login />} />
+        <Route path="/users" element={<Users />} />
+      </Routes>
+    </Router>
   );
 }
 
