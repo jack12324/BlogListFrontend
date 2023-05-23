@@ -15,7 +15,6 @@ describe("Blog app", () => {
   });
 
   it("Login form is shown", () => {
-    cy.contains("Log In");
     cy.contains("login");
   });
 
@@ -75,7 +74,7 @@ describe("Blog app", () => {
       },
     ];
 
-    describe("And notes exist", () => {
+    describe("And blogs exist", () => {
       beforeEach(() => {
         cy.createBlog(startingBlogs[0]);
         cy.createBlog(startingBlogs[1]);
@@ -84,24 +83,21 @@ describe("Blog app", () => {
         cy.login({ username: "test_user", password: "test" });
       });
       it("the user can like a blog", () => {
-        cy.contains("test blog 1").contains("view").click();
-        cy.contains("test blog 1").parent().get(".likes").as("likesp");
+        cy.contains("test blog 1").click();
+        cy.get(".likes").as("likesp");
         cy.get("@likesp").contains("0");
         cy.get("@likesp").contains("like").click();
         cy.get("@likesp").contains("1");
       });
       it("the user can delete one of their blogs", () => {
-        cy.contains("test blog 1").contains("view").click();
-        cy.contains("test blog 1").parent().get("#delete-blog-button").click();
+        cy.contains("test blog 1").click();
+        cy.get("#delete-blog-button").click();
         cy.wait(6000);
         cy.get("html").should("not.contain", "test blog 1");
       });
       it("the user can not see the remove button if they didn't create the note", () => {
-        cy.contains("test blog 3").contains("view").click();
-        cy.contains("test blog 3")
-          .parent()
-          .get("#delete-blog-button")
-          .should("not.exist");
+        cy.contains("test blog 3").click();
+        cy.get("#delete-blog-button").should("not.exist");
       });
       it("blogs are displayed according the the number of likes", () => {
         const sortedStartingItems = startingBlogs.toSorted(

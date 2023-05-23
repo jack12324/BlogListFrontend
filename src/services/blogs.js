@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 
-const baseUrl = '/api/blogs';
+const baseUrl = "/api/blogs";
 
 let token = null;
 
@@ -24,7 +24,10 @@ const getAll = async () => {
 };
 
 const update = async (blog) => {
-  const response = await axios.put(`${baseUrl}/${blog.id}`, blog);
+  const response = await axios.put(`${baseUrl}/${blog.id}`, {
+    ...blog,
+    user: blog.user.id,
+  });
   return response.data;
 };
 
@@ -40,6 +43,10 @@ const deleteBlog = async (id) => {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 const service = {
-  setToken, getAll, create, update, deleteBlog,
+  setToken,
+  getAll,
+  create,
+  update,
+  deleteBlog,
 };
 export default service;
