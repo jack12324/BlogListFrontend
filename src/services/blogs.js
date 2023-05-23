@@ -41,6 +41,11 @@ const deleteBlog = async (id) => {
   return response.data;
 };
 
+const addCommentToBlog = async (id, comment) => {
+  const response = await axios.post(`${baseUrl}/${id}/comments`, { comment });
+  return response.data;
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
 const service = {
   setToken,
@@ -48,5 +53,6 @@ const service = {
   create,
   update,
   deleteBlog,
+  addCommentToBlog,
 };
 export default service;

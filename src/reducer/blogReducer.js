@@ -84,3 +84,19 @@ export const likeBlog = (blog) => async (dispatch) => {
     dispatch(displayErrorNotificationFor("Liking blog failed", 5));
   }
 };
+
+export const addCommentToBlog = (blog, comment) => async (dispatch) => {
+  try {
+    const addedComment = await blogService.addCommentToBlog(blog.id, comment);
+    dispatch(
+      updateBlog({ ...blog, comments: blog.comments.concat(addedComment) })
+    );
+  } catch (err) {
+    let errMessage = "Adding comment failed";
+    const msg = err.response.data.error;
+    if (msg && msg.includes("comments:")) {
+      errMessage = `${errMessage}: ${msg.slice(msg.indexOf("comments:") + 10)}`;
+    }
+    dispatch(displayErrorNotificationFor(errMessage, 5));
+  }
+};
