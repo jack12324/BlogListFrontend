@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Route,
-  BrowserRouter as Router,
-  Routes,
-  Navigate,
-} from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import "./index.css";
+import {
+  Box,
+  Center,
+  Container,
+  Heading,
+  Highlight,
+  useTheme,
+} from "@chakra-ui/react";
 import SuccessNotification from "./components/SuccessNotification";
 import ErrorNotification from "./components/ErrorNotification";
 import { initializeBlogs } from "./reducer/blogReducer";
@@ -22,6 +25,7 @@ import NavBar from "./components/NavBar";
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.currentUser);
+  const theme = useTheme();
 
   useEffect(() => {
     dispatch(initializeBlogs());
@@ -43,23 +47,37 @@ function App() {
   };
 
   return (
-    <Router>
-      <NavBar />
-      <h1>Blogs App</h1>
-      <SuccessNotification />
-      <ErrorNotification />
+    <Box
+      as="section"
+      pb={{
+        base: "12",
+        md: "24",
+      }}
+    >
+      <Container w={{ xl: theme.breakpoints.xl }} maxW="100%">
+        <NavBar />
+        <Center pt="2" pb="4">
+          <Heading as="h1" size="2xl">
+            <Highlight query="Enrich" styles={{ color: "green.300" }}>
+              Blogs to Enrich Your Life
+            </Highlight>
+          </Heading>
+        </Center>
+        <SuccessNotification />
+        <ErrorNotification />
 
-      <Routes>
-        <Route path="/" element={requireLogin(<Blogs />)} />
-        <Route path="/users" element={requireLogin(<Users />)} />
-        <Route path="/users/:id" element={requireLogin(<User />)} />
-        <Route path="/blogs/:id" element={requireLogin(<Blog />)} />
-        <Route
-          path="/login"
-          element={user ? <Navigate replace to="/" /> : <Login />}
-        />
-      </Routes>
-    </Router>
+        <Routes>
+          <Route path="/" element={requireLogin(<Blogs />)} />
+          <Route path="/users" element={requireLogin(<Users />)} />
+          <Route path="/users/:id" element={requireLogin(<User />)} />
+          <Route path="/blogs/:id" element={requireLogin(<Blog />)} />
+          <Route
+            path="/login"
+            element={user ? <Navigate replace to="/" /> : <Login />}
+          />
+        </Routes>
+      </Container>
+    </Box>
   );
 }
 

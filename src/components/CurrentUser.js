@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Button, HStack, Text } from "@chakra-ui/react";
 import { logout } from "../reducer/currentUserReducer";
 
 function CurrentUser() {
@@ -14,12 +15,19 @@ function CurrentUser() {
 
   if (!user) return null;
   return (
-    <span>
-      {user.name} is logged in{" "}
-      <button type="button" onClick={onLogout}>
+    <HStack justify="space-between" spacing="4" fontSize="lg">
+      <Text colorScheme="gray" color="gray.700" fontWeight="semibold">
+        Welcome {user.name}!
+      </Text>
+      <Button
+        variant="outline"
+        colorScheme="gray"
+        fontSize="lg"
+        onClick={onLogout}
+      >
         Log Out
-      </button>
-    </span>
+      </Button>
+    </HStack>
   );
 }
 

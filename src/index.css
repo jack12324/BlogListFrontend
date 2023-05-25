@@ -22,10 +22,3 @@
     margin: 0;
     padding: 2px;
 }
-.nav-bar{
-    background: lightgray;
-    padding: 10px;
-}
-.nav-bar a, .nav-bar span {
-    padding: 5px;
-}
