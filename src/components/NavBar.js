@@ -28,7 +28,7 @@ function NavBar() {
     <>
       <HStack
         as="nav"
-        spacing="10"
+        spacing={{ base: "8", sm: "10" }}
         justify="space-between"
         pt="2"
         pb="2"
