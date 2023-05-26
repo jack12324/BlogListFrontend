@@ -2,14 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, Navigate } from "react-router-dom";
 import "./index.css";
-import {
-  Box,
-  Center,
-  Container,
-  Heading,
-  Highlight,
-  useTheme,
-} from "@chakra-ui/react";
+import { Box, Container, useTheme } from "@chakra-ui/react";
 import SuccessNotification from "./components/SuccessNotification";
 import ErrorNotification from "./components/ErrorNotification";
 import { initializeBlogs } from "./reducer/blogReducer";
@@ -56,13 +49,6 @@ function App() {
     >
       <Container w={{ xl: theme.breakpoints.xl }} maxW="100%">
         <NavBar />
-        <Center pt="2" pb="4">
-          <Heading as="h1" size="2xl">
-            <Highlight query="Enrich" styles={{ color: "green.300" }}>
-              Blogs to Enrich Your Life
-            </Highlight>
-          </Heading>
-        </Center>
         <SuccessNotification />
         <ErrorNotification />
 
