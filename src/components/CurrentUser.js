@@ -18,7 +18,7 @@ function CurrentUser() {
   return (
     <HStack justify="space-between" spacing="4" fontSize="lg">
       {isMobile ? null : (
-        <Text colorScheme="gray" color="gray.700" fontWeight="semibold">
+        <Text colorScheme="gray" color="gray.800" fontWeight="semibold">
           Welcome {user.name}!
         </Text>
       )}
