@@ -75,20 +75,20 @@ export const deleteBlog = (blog) => async (dispatch) => {
 
 export const unLikeBlog = (blog, user) => async (dispatch) => {
   try {
-    await blogService.unLikeBlog(blog.id);
     const updatedBlog = {
       ...blog,
       likes: blog.likes - 1,
       usersWhoLike: blog.usersWhoLike.filter((b) => b.id !== user.id),
     };
     dispatch(updateBlog(updatedBlog));
+    await blogService.unLikeBlog(blog.id);
   } catch (err) {
+    dispatch(updateBlog(blog));
     dispatch(displayErrorNotificationFor("Unliking blog failed", 5));
   }
 };
 export const likeBlog = (blog, user) => async (dispatch) => {
   try {
-    await blogService.likeBlog(blog.id);
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
@@ -99,7 +99,9 @@ export const likeBlog = (blog, user) => async (dispatch) => {
       }),
     };
     dispatch(updateBlog(updatedBlog));
+    await blogService.likeBlog(blog.id);
   } catch (err) {
+    dispatch(updateBlog(blog));
     dispatch(displayErrorNotificationFor("Liking blog failed", 5));
   }
 };
