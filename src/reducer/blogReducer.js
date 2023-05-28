@@ -73,12 +73,31 @@ export const deleteBlog = (blog) => async (dispatch) => {
   }
 };
 
-export const likeBlog = (blog) => async (dispatch) => {
+export const unLikeBlog = (blog, user) => async (dispatch) => {
   try {
-    const updatedBlog = await blogService.update({
+    await blogService.unLikeBlog(blog.id);
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes - 1,
+      usersWhoLike: blog.usersWhoLike.filter((b) => b.id !== user.id),
+    };
+    dispatch(updateBlog(updatedBlog));
+  } catch (err) {
+    dispatch(displayErrorNotificationFor("Unliking blog failed", 5));
+  }
+};
+export const likeBlog = (blog, user) => async (dispatch) => {
+  try {
+    await blogService.likeBlog(blog.id);
+    const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
-    });
+      usersWhoLike: blog.usersWhoLike.concat({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+      }),
+    };
     dispatch(updateBlog(updatedBlog));
   } catch (err) {
     dispatch(displayErrorNotificationFor("Liking blog failed", 5));

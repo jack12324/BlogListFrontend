@@ -24,10 +24,19 @@ const getAll = async () => {
 };
 
 const update = async (blog) => {
-  const response = await axios.put(`${baseUrl}/${blog.id}`, {
-    ...blog,
-    user: blog.user.id,
-  });
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(
+    `${baseUrl}/${blog.id}`,
+    {
+      ...blog,
+      user: blog.user.id,
+    },
+    config
+  );
   return response.data;
 };
 
@@ -38,6 +47,25 @@ const deleteBlog = async (id) => {
     },
   };
   const response = await axios.delete(`${baseUrl}/${id}`, config);
+  return response.data;
+};
+
+const likeBlog = async (id) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.post(`${baseUrl}/${id}/likes`, {}, config);
+  return response.data;
+};
+const unLikeBlog = async (id) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.delete(`${baseUrl}/${id}/likes`, config);
   return response.data;
 };
 
@@ -54,5 +82,7 @@ const service = {
   update,
   deleteBlog,
   addCommentToBlog,
+  likeBlog,
+  unLikeBlog,
 };
 export default service;

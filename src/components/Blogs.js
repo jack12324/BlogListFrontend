@@ -1,11 +1,12 @@
-import { useSelector } from "react-redux";
-import { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRef } from "react";
 import {
   Box,
   Center,
   Flex,
   Heading,
   HStack,
+  Image,
   SimpleGrid,
   Text,
   useBreakpointValue,
@@ -14,18 +15,40 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import Togglable from "./Togglable";
 import BlogForm from "./BlogForm";
 import BlogsHeading from "./BlogsHeading";
+import { likeBlog, unLikeBlog } from "../reducer/blogReducer";
 
 function Blogs() {
   const blogs = useSelector((state) =>
     [...state.blogs].sort((a, b) => b.likes - a.likes)
   );
+
+  const currentUser = useSelector((state) =>
+    state.users.find((u) => u.username === state.currentUser.username)
+  );
+
+  const dispatch = useDispatch();
   const blogFormRef = useRef();
   const isBase = useBreakpointValue({ base: true, sm: false });
-  const [liked, setLiked] = useState(false);
 
   const toggleBlogForm = () => {
     blogFormRef.current.toggleVisibility();
   };
+
+  const userLikesBlog = (user, blog) => {
+    if (blog && user) {
+      return blog.usersWhoLike.find((u) => u.username === user.username);
+    }
+    return false;
+  };
+
+  const handleLikeClick = async (blog) => {
+    if (userLikesBlog(currentUser, blog)) {
+      await dispatch(unLikeBlog(blog, currentUser));
+    } else {
+      await dispatch(likeBlog(blog, currentUser));
+    }
+  };
+
   return (
     <section>
       {isBase ? null : <BlogsHeading />}
@@ -48,7 +71,10 @@ function Blogs() {
               borderColor="grey"
             >
               <Box h="66%" borderBottom="1px" borderColor="grey">
-                test
+                <Image
+                  src={`https://picsum.photos/seed/${blog.id}/300/200`}
+                  alt="A placeholder image"
+                />
               </Box>
               <Box h="19%" borderBottom="1px">
                 <Heading
@@ -72,9 +98,13 @@ function Blogs() {
                   borderRight="1px"
                 >{`Added by ${blog.user.name}`}</Text>
                 <HStack w="25%" align="right" justify="space-between" px="1">
-                  <Flex onClick={() => setLiked(!liked)} align="center" pl="2">
-                    {liked ? (
-                      <BsHeartFill fill="red" fontSize="22px" bord />
+                  <Flex
+                    onClick={() => handleLikeClick(blog)}
+                    align="center"
+                    pl="2"
+                  >
+                    {userLikesBlog(currentUser, blog) ? (
+                      <BsHeartFill fill="red" fontSize="22px" />
                     ) : (
                       <BsHeart fontSize="22px" />
                     )}
