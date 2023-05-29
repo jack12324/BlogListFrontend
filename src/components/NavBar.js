@@ -92,10 +92,10 @@ function NavBarLinks({ orientation, clickHandler, spacing }) {
       spacing={spacing}
       orientation={orientation}
     >
-      <Button fontSize="lg" onClick={clickHandler}>
+      <Button fontSize="lg" onClick={clickHandler} justifyContent="left">
         <Link to="/">Home</Link>
       </Button>
-      <Button fontSize="lg" onClick={clickHandler}>
+      <Button fontSize="lg" onClick={clickHandler} justifyContent="left">
         <Link to="/myblogs">My Blogs</Link>
       </Button>
     </ButtonGroup>
