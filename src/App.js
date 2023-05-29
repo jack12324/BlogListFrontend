@@ -8,12 +8,10 @@ import ErrorNotification from "./components/ErrorNotification";
 import { initializeBlogs } from "./reducer/blogReducer";
 import { initializeCurrentUser } from "./reducer/currentUserReducer";
 import Login from "./components/Login";
-import Blogs from "./components/Blogs";
-import Users from "./components/Users";
 import { initializeUsers } from "./reducer/usersReducer";
-import User from "./components/User";
-import Blog from "./components/Blog";
 import NavBar from "./components/NavBar";
+import Home from "./components/Home";
+import MyBlogs from "./components/MyBlogs";
 
 function App() {
   const dispatch = useDispatch();
@@ -53,10 +51,8 @@ function App() {
         <ErrorNotification />
 
         <Routes>
-          <Route path="/" element={requireLogin(<Blogs />)} />
-          <Route path="/users" element={requireLogin(<Users />)} />
-          <Route path="/users/:id" element={requireLogin(<User />)} />
-          <Route path="/blogs/:id" element={requireLogin(<Blog />)} />
+          <Route path="/" element={requireLogin(<Home />)} />
+          <Route path="/myblogs" element={requireLogin(<MyBlogs />)} />
           <Route
             path="/login"
             element={user ? <Navigate replace to="/" /> : <Login />}

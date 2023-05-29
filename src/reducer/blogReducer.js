@@ -36,6 +36,16 @@ export const initializeBlogs = () => async (dispatch) => {
   dispatch(setBlogs(blogs));
 };
 
+const isTokenError = (msg) => msg.includes("token expired");
+const notifyTokenError = (dispatch) => {
+  dispatch(
+    displayErrorNotificationFor(
+      "Your session has expired, please log in again",
+      5
+    )
+  );
+};
+
 export const createBlog = (blog, user) => async (dispatch) => {
   try {
     const newBlog = await blogService.create(blog);
@@ -48,6 +58,13 @@ export const createBlog = (blog, user) => async (dispatch) => {
     );
     return true;
   } catch (err) {
+    const msg = err.response?.data?.error;
+    if (msg) {
+      if (isTokenError(msg)) {
+        notifyTokenError(dispatch);
+        return false;
+      }
+    }
     dispatch(displayErrorNotificationFor("Adding Blog Failed", 5));
     return false;
   }
@@ -64,6 +81,13 @@ export const deleteBlog = (blog) => async (dispatch) => {
       )
     );
   } catch (err) {
+    const msg = err.response?.data?.error;
+    if (msg) {
+      if (isTokenError(msg)) {
+        notifyTokenError(dispatch);
+        return;
+      }
+    }
     dispatch(
       displayErrorNotificationFor(
         `Deleting ${blog.title} by ${blog.author} failed`,
@@ -84,6 +108,13 @@ export const unLikeBlog = (blog, user) => async (dispatch) => {
     await blogService.unLikeBlog(blog.id);
   } catch (err) {
     dispatch(updateBlog(blog));
+    const msg = err.response?.data?.error;
+    if (msg) {
+      if (isTokenError(msg)) {
+        notifyTokenError(dispatch);
+        return;
+      }
+    }
     dispatch(displayErrorNotificationFor("Unliking blog failed", 5));
   }
 };
@@ -102,6 +133,13 @@ export const likeBlog = (blog, user) => async (dispatch) => {
     await blogService.likeBlog(blog.id);
   } catch (err) {
     dispatch(updateBlog(blog));
+    const msg = err.response?.data?.error;
+    if (msg) {
+      if (isTokenError(msg)) {
+        notifyTokenError(dispatch);
+        return;
+      }
+    }
     dispatch(displayErrorNotificationFor("Liking blog failed", 5));
   }
 };
