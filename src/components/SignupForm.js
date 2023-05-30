@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import {
   Button,
   FormControl,
@@ -18,16 +17,13 @@ import {
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import PropTypes from "prop-types";
-import { loginUser } from "../reducer/currentUserReducer";
-import ErrorAlert from "./ErrorAlert";
 
-function LoginForm({ onClose, signupClicked }) {
+function SignupForm({ onClose, logInClicked }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [invalidUsername, setInvalidUsername] = useState("");
   const [invalidPassword, setInvalidPassword] = useState("");
-  const [error, setError] = useState("");
   const validate = () => {
     let fail = false;
     if (username === "") {
@@ -45,45 +41,32 @@ function LoginForm({ onClose, signupClicked }) {
     return !fail;
   };
 
-  const dispatch = useDispatch();
-
-  const login = async () => {
+  const signup = async () => {
     if (validate()) {
-      const loginError = await dispatch(
-        loginUser({
-          username,
-          password,
-        })
-      );
-      if (!loginError) {
-        setPassword("");
-        setUsername("");
-        onClose();
-      } else {
-        setError(loginError);
-      }
+      setPassword("");
+      setUsername("");
+      onClose();
     }
   };
 
   return (
     <ModalContent as="form">
       <ModalHeader>
-        <Heading textAlign="center">Log In</Heading>
+        <Heading textAlign="center">Sign Up</Heading>
         <Text pt="2" fontWeight="normal" fontSize="md" textAlign="center">
-          New here?
+          Already a user?
           <Button
             pl="1"
             colorScheme="green"
             variant="link"
-            onClick={signupClicked}
+            onClick={logInClicked}
           >
-            Sign up
+            Log in
           </Button>
         </Text>
       </ModalHeader>
       <ModalCloseButton />
       <ModalBody>
-        {error && <ErrorAlert msg={error} />}
         <FormControl id="username" isRequired isInvalid={invalidUsername}>
           <FormLabel>Username</FormLabel>
           <Input
@@ -114,17 +97,17 @@ function LoginForm({ onClose, signupClicked }) {
         </FormControl>
       </ModalBody>
       <ModalFooter>
-        <Button colorScheme="green" bgColor="green.300" onClick={login}>
-          Log In
+        <Button colorScheme="green" bgColor="green.300" onClick={signup}>
+          Sign Up
         </Button>
       </ModalFooter>
     </ModalContent>
   );
 }
 
-LoginForm.propTypes = {
+SignupForm.propTypes = {
   onClose: PropTypes.func.isRequired,
-  signupClicked: PropTypes.func.isRequired,
+  logInClicked: PropTypes.func.isRequired,
 };
 
-export default LoginForm;
+export default SignupForm;

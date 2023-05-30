@@ -1,10 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
-import {
-  displayErrorNotificationFor,
-  displaySuccessNotificationFor,
-} from "./notificationReducer";
+import { successToast } from "../components/Toasts";
 
 const LSUSERKEY = "blogListAppLoggedInUser";
 
@@ -38,11 +35,14 @@ export const loginUser = (user) => async (dispatch) => {
     blogService.setToken(currentUser.token);
     localStorage.setItem(LSUSERKEY, JSON.stringify(currentUser));
     dispatch(setCurrentUser(currentUser));
-    dispatch(displaySuccessNotificationFor("Login Successful", 5));
-    return true;
+    successToast("Login Successful");
+    return null;
   } catch (err) {
-    dispatch(displayErrorNotificationFor("Wrong Username or Password", 5));
-    return false;
+    const msg = err.response?.data?.error;
+    if (msg) {
+      return msg;
+    }
+    return "Log in Failed";
   }
 };
 
@@ -50,6 +50,6 @@ export const logout = () => async (dispatch) => {
   dispatch(clearCurrentUser());
   blogService.setToken(null);
   localStorage.removeItem(LSUSERKEY);
-  dispatch(displaySuccessNotificationFor("Logout Successful", 5));
+  successToast("Logout Successful");
 };
 export default currentUserSlice.reducer;

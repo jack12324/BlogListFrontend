@@ -1,9 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import blogService from "../services/blogs";
-import {
-  displayErrorNotificationFor,
-  displaySuccessNotificationFor,
-} from "./notificationReducer";
+import { errorToast, successToast } from "../components/Toasts";
 
 const blogSlice = createSlice({
   name: "blogs",
@@ -37,35 +34,25 @@ export const initializeBlogs = () => async (dispatch) => {
 };
 
 const isTokenError = (msg) => msg.includes("token expired");
-const notifyTokenError = (dispatch) => {
-  dispatch(
-    displayErrorNotificationFor(
-      "Your session has expired, please log in again",
-      5
-    )
-  );
+const notifyTokenError = () => {
+  successToast("Your session has expired, please log in again");
 };
 
 export const createBlog = (blog, user) => async (dispatch) => {
   try {
     const newBlog = await blogService.create(blog);
     dispatch(appendBlog({ ...newBlog, user }));
-    dispatch(
-      displaySuccessNotificationFor(
-        `Added ${newBlog.title} by ${newBlog.author}`,
-        5
-      )
-    );
+    successToast(`Added ${newBlog.title} by ${newBlog.author}`);
     return true;
   } catch (err) {
     const msg = err.response?.data?.error;
     if (msg) {
       if (isTokenError(msg)) {
-        notifyTokenError(dispatch);
+        notifyTokenError();
         return false;
       }
     }
-    dispatch(displayErrorNotificationFor("Adding Blog Failed", 5));
+    errorToast("Adding Blog Failed");
     return false;
   }
 };
@@ -74,26 +61,16 @@ export const deleteBlog = (blog) => async (dispatch) => {
   try {
     await blogService.deleteBlog(blog.id);
     dispatch(removeBlog(blog));
-    dispatch(
-      displaySuccessNotificationFor(
-        `Deleted ${blog.title} by ${blog.author}`,
-        5
-      )
-    );
+    successToast(`Deleted ${blog.title} by ${blog.author}`);
   } catch (err) {
     const msg = err.response?.data?.error;
     if (msg) {
       if (isTokenError(msg)) {
-        notifyTokenError(dispatch);
+        notifyTokenError();
         return;
       }
     }
-    dispatch(
-      displayErrorNotificationFor(
-        `Deleting ${blog.title} by ${blog.author} failed`,
-        5
-      )
-    );
+    errorToast(`Deleting ${blog.title} by ${blog.author} failed`);
   }
 };
 
@@ -111,11 +88,11 @@ export const unLikeBlog = (blog, user) => async (dispatch) => {
     const msg = err.response?.data?.error;
     if (msg) {
       if (isTokenError(msg)) {
-        notifyTokenError(dispatch);
+        notifyTokenError();
         return;
       }
     }
-    dispatch(displayErrorNotificationFor("Unliking blog failed", 5));
+    errorToast("Unliking blog failed");
   }
 };
 export const likeBlog = (blog, user) => async (dispatch) => {
@@ -136,11 +113,11 @@ export const likeBlog = (blog, user) => async (dispatch) => {
     const msg = err.response?.data?.error;
     if (msg) {
       if (isTokenError(msg)) {
-        notifyTokenError(dispatch);
+        notifyTokenError();
         return;
       }
     }
-    dispatch(displayErrorNotificationFor("Liking blog failed", 5));
+    errorToast("Liking blog failed");
   }
 };
 
@@ -156,6 +133,6 @@ export const addCommentToBlog = (blog, comment) => async (dispatch) => {
     if (msg && msg.includes("comments:")) {
       errMessage = `${errMessage}: ${msg.slice(msg.indexOf("comments:") + 10)}`;
     }
-    dispatch(displayErrorNotificationFor(errMessage, 5));
+    errorToast(errMessage);
   }
 };

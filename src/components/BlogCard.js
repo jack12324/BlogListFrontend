@@ -11,11 +11,12 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { likeBlog, unLikeBlog } from "../reducer/blogReducer";
+import { errorToast } from "./Toasts";
 
 function BlogCard({ blog }) {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) =>
-    state.users.find((u) => u.username === state.currentUser.username)
+    state.users.find((u) => u.username === state.currentUser?.username)
   );
 
   const userLikesBlog = (user) => {
@@ -26,6 +27,10 @@ function BlogCard({ blog }) {
   };
 
   const handleLikeClick = async () => {
+    if (!currentUser) {
+      errorToast("You must log in to like a blog");
+      return;
+    }
     if (userLikesBlog(currentUser, blog)) {
       await dispatch(unLikeBlog(blog, currentUser));
     } else {

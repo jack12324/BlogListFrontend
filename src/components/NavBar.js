@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -16,14 +15,13 @@ import {
 } from "@chakra-ui/react";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 import CurrentUser from "./CurrentUser";
 import Logo from "./Logo";
 
 function NavBar() {
-  const user = useSelector((state) => state.currentUser);
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { isOpen, onOpen, onClose } = useDisclosure();
-  if (!user) return null;
   return (
     <>
       <HStack
@@ -85,6 +83,7 @@ function NavBar() {
 }
 
 function NavBarLinks({ orientation, clickHandler, spacing }) {
+  const user = useSelector((state) => state.currentUser);
   return (
     <ButtonGroup
       colorScheme="gray"
@@ -95,9 +94,11 @@ function NavBarLinks({ orientation, clickHandler, spacing }) {
       <Button fontSize="lg" onClick={clickHandler} justifyContent="left">
         <Link to="/">Home</Link>
       </Button>
-      <Button fontSize="lg" onClick={clickHandler} justifyContent="left">
-        <Link to="/myblogs">My Blogs</Link>
-      </Button>
+      {user ? (
+        <Button fontSize="lg" onClick={clickHandler} justifyContent="left">
+          <Link to="/myblogs">My Blogs</Link>
+        </Button>
+      ) : null}
     </ButtonGroup>
   );
 }

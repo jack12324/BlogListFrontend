@@ -3,11 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, Navigate } from "react-router-dom";
 import "./index.css";
 import { Box, Container, useTheme } from "@chakra-ui/react";
-import SuccessNotification from "./components/SuccessNotification";
-import ErrorNotification from "./components/ErrorNotification";
 import { initializeBlogs } from "./reducer/blogReducer";
 import { initializeCurrentUser } from "./reducer/currentUserReducer";
-import Login from "./components/Login";
 import { initializeUsers } from "./reducer/usersReducer";
 import NavBar from "./components/NavBar";
 import Home from "./components/Home";
@@ -34,7 +31,7 @@ function App() {
     if (user) {
       return element;
     }
-    return <Navigate replace to="/login" />;
+    return <Navigate replace to="/" />;
   };
 
   return (
@@ -47,16 +44,9 @@ function App() {
     >
       <Container w={{ xl: theme.breakpoints.xl }} maxW="100%">
         <NavBar />
-        <SuccessNotification />
-        <ErrorNotification />
-
         <Routes>
-          <Route path="/" element={requireLogin(<Home />)} />
+          <Route path="/" element={<Home />} />
           <Route path="/myblogs" element={requireLogin(<MyBlogs />)} />
-          <Route
-            path="/login"
-            element={user ? <Navigate replace to="/" /> : <Login />}
-          />
         </Routes>
       </Container>
     </Box>
