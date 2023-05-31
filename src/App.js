@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Navigate, Routes } from "react-router-dom";
 import "./index.css";
 import { Box, Container, useTheme } from "@chakra-ui/react";
 import { initializeBlogs } from "./reducer/blogReducer";
@@ -47,6 +47,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/myblogs" element={requireLogin(<MyBlogs />)} />
+          <Route path="/*" element={<Home />} />
         </Routes>
       </Container>
     </Box>

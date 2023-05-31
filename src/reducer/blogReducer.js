@@ -35,7 +35,7 @@ export const initializeBlogs = () => async (dispatch) => {
 
 const isTokenError = (msg) => msg.includes("token expired");
 const notifyTokenError = () => {
-  successToast("Your session has expired, please log in again");
+  errorToast("Your session has expired, please log in again");
 };
 
 export const createBlog = (blog, user) => async (dispatch) => {
@@ -58,10 +58,11 @@ export const createBlog = (blog, user) => async (dispatch) => {
 
 export const deleteBlog = (blog) => async (dispatch) => {
   try {
-    await blogService.deleteBlog(blog.id);
     dispatch(removeBlog(blog));
+    await blogService.deleteBlog(blog.id);
     successToast(`Deleted ${blog.title} by ${blog.author}`);
   } catch (err) {
+    dispatch(appendBlog(blog));
     const msg = err.response?.data?.error;
     if (msg) {
       if (isTokenError(msg)) {
