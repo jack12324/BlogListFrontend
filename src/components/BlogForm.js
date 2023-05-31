@@ -1,84 +1,87 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import {
+  Button,
+  Heading,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@chakra-ui/react";
+import { useState } from "react";
 import { createBlog } from "../reducer/blogReducer";
+import { useRequiredField } from "../hooks";
+import RequiredFormTextControl from "./RequiredFormTextControl";
+import ErrorAlert from "./ErrorAlert";
 
-function BlogForm({ toggle }) {
-  const [author, setAuthor] = useState("");
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
+function BlogForm({ onClose }) {
+  const author = useRequiredField("text", "author");
+  const title = useRequiredField("text", "title");
+  const url = useRequiredField("text", "url");
+  const [error, setError] = useState("");
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.currentUser);
 
+  const validateFields = () => {
+    let result = author.validate();
+    result = title.validate() && result;
+    result = url.validate() && result;
+    return result;
+  };
+
+  const resetFields = () => {
+    author.reset();
+    title.reset();
+    url.reset();
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const success = await dispatch(
-      createBlog(
-        {
-          author,
-          title,
-          url,
-        },
-        user
-      )
-    );
-    if (success) {
-      setAuthor("");
-      setTitle("");
-      setUrl("");
-      toggle();
+    if (validateFields()) {
+      const err = await dispatch(
+        createBlog(
+          {
+            author: author.input.value,
+            title: title.input.value,
+            url: url.input.value,
+          },
+          user
+        )
+      );
+      if (!err) {
+        resetFields();
+        onClose();
+      } else {
+        setError(err);
+      }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <p>
-        <label htmlFor="title">
-          Title:
-          <input
-            type="text"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-            id="title"
-          />
-        </label>
-      </p>
-      <p>
-        <label htmlFor="author">
-          Author:
-          <input
-            type="text"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-            id="author"
-          />
-        </label>
-      </p>
-      <p>
-        <label htmlFor="url">
-          Url:
-          <input
-            type="text"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-            id="url"
-          />
-        </label>
-      </p>
-      <button id="blog-form-submit-button" type="submit">
-        create
-      </button>
-    </form>
+    <ModalContent as="form">
+      <ModalHeader>
+        <Heading textAlign="center">Add a Blog</Heading>
+      </ModalHeader>
+      <ModalCloseButton />
+      <ModalBody>
+        {error ? <ErrorAlert msg={error} /> : null}
+        <RequiredFormTextControl field={title} name="title" />
+        <RequiredFormTextControl field={author} name="author" />
+        <RequiredFormTextControl field={url} name="url" />
+      </ModalBody>
+      <ModalFooter>
+        <Button colorScheme="green" bgColor="green.300" onClick={handleSubmit}>
+          Add
+        </Button>
+      </ModalFooter>
+    </ModalContent>
   );
 }
 
 BlogForm.propTypes = {
-  toggle: PropTypes.func,
-};
-
-BlogForm.defaultProps = {
-  toggle: () => {},
+  onClose: PropTypes.func.isRequired,
 };
 
 export default BlogForm;

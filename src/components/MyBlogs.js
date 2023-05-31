@@ -19,7 +19,7 @@ function MyBlogs() {
     <>
       <section>
         <BlogsHeading msg="Blogs You've Added" highlightWord="Added" />
-        <BlogGrid blogs={addedBlogs} />
+        <BlogGrid blogs={addedBlogs} add />
       </section>
       <Divider pt="2" />
       <section>

@@ -5,6 +5,8 @@ import {
   Heading,
   HStack,
   Image,
+  LinkBox,
+  LinkOverlay,
   Text,
 } from "@chakra-ui/react";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
@@ -39,7 +41,7 @@ function BlogCard({ blog }) {
   };
 
   return (
-    <Center key={blog.id} height="300px">
+    <Center height="300px">
       <Box
         h="300px"
         w="300px"
@@ -48,20 +50,23 @@ function BlogCard({ blog }) {
         border="1px"
         borderColor="grey"
       >
-        <Box h="66%" borderBottom="1px" borderColor="grey">
-          <Image
-            src={`https://picsum.photos/seed/${blog.id}/300/200`}
-            alt="A placeholder image"
-          />
-        </Box>
-        <Box h="19%" borderBottom="1px">
-          <Heading color="grey.800" noOfLines={1} fontSize="lg" px="1" pt="1">
-            {blog.title}
-          </Heading>
-          <Text px="2" color="green.300" noOfLines={1} align="right">
-            {blog.author}
-          </Text>
-        </Box>
+        <LinkBox h="85%">
+          <Box h="78%" borderBottom="1px" borderColor="grey">
+            <Image
+              src={`https://picsum.photos/seed/${blog.id}/300/200`}
+              alt="A placeholder image"
+            />
+          </Box>
+          <Box borderBottom="1px">
+            <Heading color="grey.800" noOfLines={1} fontSize="lg" px="1" pt="1">
+              {blog.title}
+            </Heading>
+            <Text pb="1" px="2" color="green.300" noOfLines={1} align="right">
+              {blog.author}
+            </Text>
+          </Box>
+          <LinkOverlay href={blog.url} />
+        </LinkBox>
         <HStack h="15%" alignItems="center" px="1">
           <Text
             px="1"
@@ -72,9 +77,9 @@ function BlogCard({ blog }) {
           <HStack w="25%" align="right" justify="space-between" px="1">
             <Flex onClick={() => handleLikeClick(blog)} align="center" pl="2">
               {userLikesBlog(currentUser, blog) ? (
-                <BsHeartFill fill="hotpink" fontSize="22px" />
+                <BsHeartFill fill="hotpink" fontSize="22px" cursor="pointer" />
               ) : (
-                <BsHeart fontSize="22px" />
+                <BsHeart fontSize="22px" cursor="pointer" />
               )}
             </Flex>
             <Text>{blog.likes}</Text>
@@ -90,6 +95,7 @@ BlogCard.propTypes = {
     id: PropTypes.string,
     title: PropTypes.string,
     author: PropTypes.string,
+    url: PropTypes.string,
     user: PropTypes.shape({
       name: PropTypes.string,
     }),

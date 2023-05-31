@@ -43,17 +43,16 @@ export const createBlog = (blog, user) => async (dispatch) => {
     const newBlog = await blogService.create(blog);
     dispatch(appendBlog({ ...newBlog, user }));
     successToast(`Added ${newBlog.title} by ${newBlog.author}`);
-    return true;
+    return null;
   } catch (err) {
     const msg = err.response?.data?.error;
     if (msg) {
       if (isTokenError(msg)) {
-        notifyTokenError();
-        return false;
+        return "Your session has expired, please log in again";
       }
+      return msg;
     }
-    errorToast("Adding Blog Failed");
-    return false;
+    return "Adding Blog Failed";
   }
 };
 
