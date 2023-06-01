@@ -98,11 +98,7 @@ function BlogCard({ blog }) {
             <LinkOverlay href={blog.url} />
           </LinkBox>
           <HStack h="15%" alignItems="center" px="1" justify="space-between">
-            <Text
-              px="1"
-              noOfLines={1}
-              w="50%"
-            >{`Added by ${blog.user.name}`}</Text>
+            <Text px="1" noOfLines={1}>{`Added by ${blog.user.name}`}</Text>
             <HStack align="right" justify="space-between" px="1">
               <Box borderRight="1px" />
               {isUsersBlog() ? (
@@ -113,7 +109,7 @@ function BlogCard({ blog }) {
                   <Box borderLeft="1px" />
                 </>
               ) : null}
-              <HStack justify="space-between" borderLeft="0px">
+              <HStack justify="space-between">
                 <Flex onClick={() => handleLikeClick(blog)} align="center">
                   {userLikesBlog(currentUser, blog) ? (
                     <BsHeartFill

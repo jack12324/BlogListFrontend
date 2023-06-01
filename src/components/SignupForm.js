@@ -1,6 +1,10 @@
 import {
   Button,
+  FormControl,
+  FormHelperText,
+  FormLabel,
   Heading,
+  Input,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -9,24 +13,43 @@ import {
   Text,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
-import { useRequiredField } from "../hooks";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { useField, useRequiredField } from "../hooks";
 import RequiredFormTextControl from "./RequiredFormTextControl";
 import RequiredFormPasswordControl from "./RequiredFormPasswordControl";
+import { signUp } from "../reducer/usersReducer";
+import ErrorAlert from "./ErrorAlert";
 
 function SignupForm({ onClose, logInClicked }) {
   const username = useRequiredField("text", "username");
   const password = useRequiredField("text", "password");
+  const displayName = useField("text");
+  const [error, setError] = useState("");
   const validate = () => {
     let result = username.validate();
     result = password.validate() && result;
     return result;
   };
 
+  const dispatch = useDispatch();
+
   const signup = async () => {
     if (validate()) {
-      password.reset();
-      username.reset();
-      onClose();
+      const errorMessage = await dispatch(
+        signUp({
+          username: username.input.value,
+          password: password.input.value,
+          name: displayName.input.value,
+        })
+      );
+      if (!errorMessage) {
+        password.reset();
+        username.reset();
+        onClose();
+      } else {
+        setError(errorMessage);
+      }
     }
   };
 
@@ -48,8 +71,21 @@ function SignupForm({ onClose, logInClicked }) {
       </ModalHeader>
       <ModalCloseButton />
       <ModalBody>
+        {error && <ErrorAlert msg={error} />}
         <RequiredFormTextControl field={username} name="username" />
         <RequiredFormPasswordControl field={password} />
+        <FormControl id="displayName">
+          <FormLabel>Display Name</FormLabel>
+          <Input
+            type={displayName.input.type}
+            value={displayName.input.value}
+            onChange={displayName.input.onChange}
+          />
+          <FormHelperText>
+            This is the name that will display on blogs you add. If none is
+            supplied, your username will be used
+          </FormHelperText>
+        </FormControl>
       </ModalBody>
       <ModalFooter>
         <Button colorScheme="green" bgColor="green.300" onClick={signup}>
