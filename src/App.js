@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Navigate, Routes } from "react-router-dom";
-import "./index.css";
 import { Box, Container, useTheme } from "@chakra-ui/react";
 import { initializeBlogs } from "./reducer/blogReducer";
 import { initializeCurrentUser } from "./reducer/currentUserReducer";

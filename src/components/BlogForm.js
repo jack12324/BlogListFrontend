@@ -2,7 +2,11 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import {
   Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Heading,
+  Input,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -11,14 +15,14 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { createBlog } from "../reducer/blogReducer";
-import { useRequiredField } from "../hooks";
+import { useRequiredField, useUrlField } from "../hooks";
 import RequiredFormTextControl from "./RequiredFormTextControl";
 import ErrorAlert from "./ErrorAlert";
 
 function BlogForm({ onClose }) {
   const author = useRequiredField("text", "author");
   const title = useRequiredField("text", "title");
-  const url = useRequiredField("text", "url");
+  const url = useUrlField("url");
   const [error, setError] = useState("");
 
   const dispatch = useDispatch();
@@ -69,7 +73,15 @@ function BlogForm({ onClose }) {
         {error ? <ErrorAlert msg={error} /> : null}
         <RequiredFormTextControl field={title} name="title" />
         <RequiredFormTextControl field={author} name="author" />
-        <RequiredFormTextControl field={url} name="url" />
+        <FormControl id="url" isRequired isInvalid={url.error}>
+          <FormLabel>Url</FormLabel>
+          <Input
+            type="url"
+            value={url.input.value}
+            onChange={url.input.onChange}
+          />
+          <FormErrorMessage>{url.error}</FormErrorMessage>
+        </FormControl>
       </ModalBody>
       <ModalFooter>
         <Button colorScheme="green" bgColor="green.300" onClick={handleSubmit}>

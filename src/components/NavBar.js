@@ -18,6 +18,7 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import CurrentUser from "./CurrentUser";
 import Logo from "./Logo";
+import ColorModeButton from "./ColorModeButton";
 
 function NavBar() {
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -47,14 +48,20 @@ function NavBar() {
               onClick={isOpen ? onClose : onOpen}
             />
             <Logo />
-            <CurrentUser />
+            <HStack>
+              <CurrentUser />
+              <ColorModeButton />
+            </HStack>
           </>
         ) : (
           <>
             <Logo />
             <HStack justify="space-between" spacing="8">
               <NavBarLinks />
-              <CurrentUser />
+              <HStack>
+                <CurrentUser />
+                <ColorModeButton />
+              </HStack>
             </HStack>
           </>
         )}

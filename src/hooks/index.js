@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-export const useField = (type) => {
-  const [value, setValue] = useState("");
+export const useField = (type, initialValue = "") => {
+  const [value, setValue] = useState(initialValue);
 
   const onChange = (event) => {
     setValue(event.target.value);
@@ -23,8 +23,8 @@ export const useField = (type) => {
   };
 };
 
-export const useRequiredField = (type, name) => {
-  const { input, reset } = useField(type);
+export const useRequiredField = (type, name, initial = "") => {
+  const { input, reset } = useField(type, initial);
   const [error, setError] = useState("");
 
   const validate = () => {
@@ -34,6 +34,32 @@ export const useRequiredField = (type, name) => {
     }
     setError("");
     return true;
+  };
+
+  return {
+    validate,
+    reset,
+    error,
+    setError,
+    input,
+  };
+};
+
+export const useUrlField = (name) => {
+  const {
+    validate: validateParent,
+    reset,
+    error,
+    setError,
+    input,
+  } = useRequiredField("url", name, "https://");
+
+  const validate = () => {
+    if (!input.value.startsWith("https://")) {
+      setError("Url must start with https://");
+      return false;
+    }
+    return validateParent();
   };
 
   return {

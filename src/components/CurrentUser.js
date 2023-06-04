@@ -34,7 +34,7 @@ function CurrentUser() {
         ) : (
           <>
             {isMobile ? null : (
-              <Text colorScheme="gray" color="gray.800" fontWeight="semibold">
+              <Text color="grey.800" fontWeight="semibold">
                 Welcome {user.name}!
               </Text>
             )}

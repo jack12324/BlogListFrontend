@@ -5,8 +5,6 @@ import {
   Heading,
   HStack,
   Image,
-  LinkBox,
-  LinkOverlay,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -16,11 +14,16 @@ import PropTypes from "prop-types";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { deleteBlog, likeBlog, unLikeBlog } from "../reducer/blogReducer";
 import { errorToast } from "./Toasts";
-import DeleteAlert from "./DeleteAlert";
+import ConfirmAlert from "./ConfirmAlert";
 
 function BlogCard({ blog }) {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isLinkOpen,
+    onOpen: onLinkOpen,
+    onClose: onLinkClose,
+  } = useDisclosure();
 
   const currentUser = useSelector((state) =>
     state.users.find((u) => u.username === state.currentUser?.username)
@@ -56,13 +59,37 @@ function BlogCard({ blog }) {
     dispatch(deleteBlog(blog));
   };
 
+  const handleLink = () => {
+    window.open(blog.url);
+  };
+
   return (
     <>
       {isOpen && (
-        <DeleteAlert
+        <ConfirmAlert
           onClose={onClose}
           isOpen={isOpen}
-          deleteConfirmed={handleDelete}
+          confirmed={handleDelete}
+          header="Delete Blog"
+          body={"You are about to delete a blog. You can't undo this action"}
+          confirmText="Delete"
+        />
+      )}
+      {isLinkOpen && (
+        <ConfirmAlert
+          onClose={onLinkClose}
+          isOpen={isLinkOpen}
+          confirmed={handleLink}
+          header="Link to External Site"
+          body={
+            <>
+              <Text>
+                You are about to open <b>{blog.url}</b>
+              </Text>
+              <Text>Only continue if you trust this site</Text>
+            </>
+          }
+          confirmText="Continue"
         />
       )}
       <Center height="300px">
@@ -74,7 +101,12 @@ function BlogCard({ blog }) {
           border="1px"
           borderColor="grey"
         >
-          <LinkBox h="85%">
+          <Box
+            h="85%"
+            aria-label={`link to ${blog.url}`}
+            cursor="pointer"
+            onClick={onLinkOpen}
+          >
             <Box h="78%" borderBottom="1px" borderColor="grey">
               <Image
                 src={`https://picsum.photos/seed/${blog.id}/300/200`}
@@ -95,8 +127,7 @@ function BlogCard({ blog }) {
                 {blog.author}
               </Text>
             </Box>
-            <LinkOverlay href={blog.url} />
-          </LinkBox>
+          </Box>
           <HStack h="15%" alignItems="center" px="1" justify="space-between">
             <Text px="1" noOfLines={1}>{`Added by ${blog.user.name}`}</Text>
             <HStack align="right" justify="space-between" px="1">
@@ -104,7 +135,12 @@ function BlogCard({ blog }) {
               {isUsersBlog() ? (
                 <>
                   <Center>
-                    <DeleteIcon as="button" cursor="pointer" onClick={onOpen} />
+                    <DeleteIcon
+                      as="button"
+                      cursor="pointer"
+                      onClick={onOpen}
+                      aria-label="delete blog"
+                    />
                   </Center>
                   <Box borderLeft="1px" />
                 </>

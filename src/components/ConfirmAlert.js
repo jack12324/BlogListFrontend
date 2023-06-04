@@ -10,10 +10,17 @@ import {
 import { useRef } from "react";
 import PropTypes from "prop-types";
 
-function DeleteAlert({ isOpen, onClose, deleteConfirmed }) {
+function ConfirmAlert({
+  isOpen,
+  onClose,
+  confirmed,
+  header,
+  body,
+  confirmText,
+}) {
   const cancelRef = useRef();
-  const deleteClicked = () => {
-    deleteConfirmed();
+  const confirmClicked = () => {
+    confirmed();
     onClose();
   };
 
@@ -25,16 +32,14 @@ function DeleteAlert({ isOpen, onClose, deleteConfirmed }) {
     >
       <AlertDialogOverlay />
       <AlertDialogContent>
-        <AlertDialogHeader>Delete Blog</AlertDialogHeader>
-        <AlertDialogBody>
-          You are about to delete a blog. You can&apos;t undo this action
-        </AlertDialogBody>
+        <AlertDialogHeader>{header}</AlertDialogHeader>
+        <AlertDialogBody>{body}</AlertDialogBody>
         <AlertDialogFooter>
           <Button ref={cancelRef} onClick={onClose}>
             Cancel
           </Button>
-          <Button colorScheme="red" onClick={deleteClicked} ml="3">
-            Delete
+          <Button colorScheme="red" onClick={confirmClicked} ml="3">
+            {confirmText}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -42,10 +47,13 @@ function DeleteAlert({ isOpen, onClose, deleteConfirmed }) {
   );
 }
 
-DeleteAlert.propTypes = {
+ConfirmAlert.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  deleteConfirmed: PropTypes.func.isRequired,
+  confirmed: PropTypes.func.isRequired,
+  header: PropTypes.string.isRequired,
+  body: PropTypes.node.isRequired,
+  confirmText: PropTypes.string.isRequired,
 };
 
-export default DeleteAlert;
+export default ConfirmAlert;
